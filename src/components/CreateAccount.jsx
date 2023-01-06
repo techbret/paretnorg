@@ -15,7 +15,7 @@ export default function CreateAccount() {
             
             <div className="mx-auto max-w-7xl py-4 grid grid-cols-9 gap-4">
                   <div className="h-48 rounded-lg border-4 border-dashed border-gray-200 col-span-9" >
-                    Information
+                    Information or Image
                   </div>
 
                   <div className="col-span-9 py-12 px-4 sm:px-6 lg:py-16 lg:px-8">

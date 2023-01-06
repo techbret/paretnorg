@@ -4,7 +4,7 @@ import { UserAuth } from '../../context/AuthContext'
 
 export default function CreateStudent() {
     const { students, updateStudent } = UserAuth()
-    const [name, setName] = useState(students[0].name);
+    const [name, setName] = useState('students[0].name');
     const [userName, setUserName] = useState('');
     const [gradeLevel, setGradeLevel] = useState('');
     const [imageIndex, setImageIndex] = useState();
