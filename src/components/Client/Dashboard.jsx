@@ -5,6 +5,7 @@ import {
   CalendarIcon,
   ChartBarIcon,
   Cog8ToothIcon,
+  CreditCardIcon,
   HomeIcon,
   InboxIcon,
   UsersIcon,
@@ -20,6 +21,7 @@ import Settings from './Settings'
 import AssignLessons from './AssignLessons'
 import Resources from './Resources'
 import Reports from './Reports'
+import Billing from './Billing'
 
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: 1 },
@@ -28,6 +30,7 @@ const navigation = [
   { name: 'Assign Lessons', href: '#', icon: CalendarIcon, current: 4 },
   { name: 'Resources', href: '#', icon: InboxIcon, current: 5 },
   { name: 'Reports', href: '#', icon: ChartBarIcon, current: 6 },
+  { name: 'Billing', href: '#', icon: CreditCardIcon, current: 7 },
 ]
 
 function classNames(...classes) {
@@ -40,7 +43,7 @@ export default function Dashboard() {
   const {profile, logout} = UserAuth();
   const navigate = useNavigate();
 
-  let currentPage = [<Main />, <Student />, <Settings />, <AssignLessons />, <Resources />, <Reports />]
+  let currentPage = [<Main />, <Student />, <Settings />, <AssignLessons />, <Resources />, <Reports />, <Billing />]
   
   const handleSubmit = (e) => {
     e.preventDefault();

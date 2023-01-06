@@ -34,8 +34,8 @@ export default function CreateStudent() {
 
                     <div className="px-4 py-4 sm:px-0">
                         <div className="rounded-lg shadow-lg bg-white max-w-5xl mx-auto">
-                            <h1 className='text-2xl text-center font-bold pt-8'>Create your Student's Account</h1>
-                            <h3 className='text-center text-lg'>Fill out this information to get your child started and able to login to their account</h3>
+                            <h1 className='text-2xl text-center font-bold pt-8'>Edit your Student's Account</h1>
+                            <h3 className='text-center text-lg'>Here you can change, update, or delete anything related to your student</h3>
                             <form className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4 md:p-16 p-4 m-4 md:m-0">
 
                                 <div className="relative rounded-md border border-gray-300 px-4 py-2 shadow-sm focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500 col-span-1 sm:col-span-2">
@@ -67,7 +67,7 @@ export default function CreateStudent() {
                                         name="name"
                                         id="name"
                                         className="block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-md mt-1"
-                                        placeholder="This is the username they will use for login"
+                                        placeholder={students ? students[0]?.userName : 'Enter Student'}
                                         onChange={(e) => (setUserName(e.target.value))}
                                     />
                                 </div>
@@ -85,7 +85,7 @@ export default function CreateStudent() {
                                             id="location"
                                             name="location"
                                             className="block w-full border-0 px-4 py-2 text-gray-900 focus:ring-0 sm:text-md rounded-md"
-                                            defaultValue="Current Grade Level"
+                                            defaultValue={students ? students[0]?.gradeLevel : 'Current Grade Level'}
                                             onChange={(e) => (setGradeLevel(e.target.value))}
 
                                         >
