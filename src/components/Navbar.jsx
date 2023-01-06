@@ -15,8 +15,8 @@ const user = {
 const navigation = [
   { name: 'Parents', href: '/Parents', current: false },
   { name: 'Research', href: '/research', current: false },
-  { name: 'Our Method', href: '#', current: false },
-  { name: 'Resources', href: '#', current: false },
+  { name: 'Our Method', href: '/our-method', current: false },
+  { name: 'Resources', href: '/resources', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },

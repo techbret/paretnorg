@@ -15,6 +15,8 @@ import NonUserRoutes from './config/NonUserRoutes';
 import Parents from './components/Parents';
 import Research from './components/Research';
 import StudentLogin from './components/Student/StudentLogin';
+import OurMethod from './components/OurMethod';
+import Resources from './components/Resources';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path='/parents' element={<Parents />} />
           <Route path='/research' element={<Research />} />
           <Route path='/student-login' element={<StudentLogin />} />
+          <Route path='/our-method' element={<OurMethod />} />
+          <Route path='/resources' element={<Resources />} />
         </Routes>
       </AuthContextProvider>
 

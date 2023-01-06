@@ -118,7 +118,7 @@ export default function UserInfo() {
                         className=" items-center text-center rounded-md border border-transparent bg-yellow-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2"
                         onClick={handleSubmit}
                     >
-                        Button text
+                        Next
                     </button>
                 </form>
 

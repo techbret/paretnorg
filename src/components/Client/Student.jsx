@@ -8,7 +8,7 @@ export default function Student() {
 
   console.log(profile.hasStudent)
 
-  if (profile.hasStudent) {
+  if (profile?.hasStudent) {
     return <h1>Student</h1>
   } else {
     return (
