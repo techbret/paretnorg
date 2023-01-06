@@ -1,23 +1,42 @@
 import logo from './logo.svg';
 import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import Home from './components/Home';
+import NavBar from './components/Navbar';
+import AuthContextProvider from './context/AuthContext';
+import Login from './components/Login';
+import CreateAccount from './components/CreateAccount';
+import UserInfo from './components/SetUp/UserInfo';
+import StudentInfo from './components/SetUp/StudentInfo';
+import Info from './components/SetUp/Info';
+import Finish from './components/SetUp/FinishUp';
+import Dashboard from './components/Client/Dashboard';
+import NonUserRoutes from './config/NonUserRoutes';
+import Parents from './components/Parents';
+import Research from './components/Research';
+import StudentLogin from './components/Student/StudentLogin';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AuthContextProvider>
+        <NonUserRoutes />
+        {/* <NavBar /> */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/create-account" element={<CreateAccount />} />
+          <Route path="/create-account/:id" element={<UserInfo />} />
+          <Route path='/student-info' element={<StudentInfo />} />
+          <Route path='/more-info' element={<Info />} />
+          <Route path='/finish-up' element={<Finish />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/parents' element={<Parents />} />
+          <Route path='/research' element={<Research />} />
+          <Route path='/student-login' element={<StudentLogin />} />
+        </Routes>
+      </AuthContextProvider>
+
     </div>
   );
 }
