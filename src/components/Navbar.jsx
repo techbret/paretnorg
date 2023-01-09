@@ -1,10 +1,11 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ArrowLeftOnRectangleIcon, ArrowRightOnRectangleIcon, PlusIcon } from '@heroicons/react/20/solid'
 import logo from '../assets/logo.svg'
 import { UserAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
+import StudentNavBar from './Student/StudentNavBar'
 
 const user = {
   name: 'Tom Cook',
@@ -33,8 +34,12 @@ export default function NavBar() {
 
   if (isLoggedIn) {
     return <></>
-  } else {
 
+  } else if (window.localStorage.getItem("auth") === "true") {
+
+   return <StudentNavBar />
+
+  } else {
     return (
       <Disclosure as="nav" className="bg-emerald-600">
         {({ open }) => (

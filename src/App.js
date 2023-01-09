@@ -17,6 +17,7 @@ import Research from './components/Research';
 import StudentLogin from './components/Student/StudentLogin';
 import OurMethod from './components/OurMethod';
 import Resources from './components/Resources';
+import StudentDashboard from './components/Student/StudentDashboard';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path='/student-login' element={<StudentLogin />} />
           <Route path='/our-method' element={<OurMethod />} />
           <Route path='/resources' element={<Resources />} />
+          <Route path='/studentDashboard/:id' element={<StudentDashboard />} />
         </Routes>
       </AuthContextProvider>
 
