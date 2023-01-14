@@ -12,8 +12,7 @@ function StudentLogin() {
   const navigate = useNavigate();
   const { studentSignIn } = UserAuth();
 
-  console.log(password)
-
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

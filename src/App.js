@@ -23,8 +23,8 @@ function App() {
   return (
     <div>
       <AuthContextProvider>
-        <NonUserRoutes />
-        {/* <NavBar /> */}
+        <NonUserRoutes>
+        </NonUserRoutes>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

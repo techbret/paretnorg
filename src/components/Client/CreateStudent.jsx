@@ -17,9 +17,7 @@ export default function CreateStudent() {
         gradeLevel: gradeLevel,
         imageIndex: imageIndex,
         _id: id
-    }
-
-    
+    }    
 
     const handleUpdate = (e) => {
         e.preventDefault();
