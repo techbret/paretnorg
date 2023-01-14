@@ -29,7 +29,7 @@ function classNames(...classes) {
 export default function AssignLessons() {
   const { students } = UserAuth();
 
-  console.log(students);
+  
 
   return (
     <div className="max-w-7xl mx-auto">

@@ -18,6 +18,7 @@ export default function StudentInfo() {
         pronouns: pronouns,
         agreeCoppa: agreeCoppa,
         parentID: profile._id,
+        hasAccount: false
     }
 
     const handleSubmit = (e) => {

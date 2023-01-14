@@ -35,10 +35,6 @@ export default function NavBar() {
   if (isLoggedIn) {
     return <></>
 
-  } else if (window.localStorage.getItem("auth") === "true") {
-
-   return <StudentNavBar />
-
   } else {
     return (
       <Disclosure as="nav" className="bg-emerald-600">

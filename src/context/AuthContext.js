@@ -32,11 +32,19 @@ export default function AuthContextProvider({ children }) {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             if (doc.data().imageIndex === token) {
-                setStudentUser(doc.data());
-                window.localStorage.setItem("auth", "true");
-                const studentObj = JSON.stringify(doc.data())
-                window.localStorage.setItem("student", studentObj);
-                navigate('/studentDashboard/' + doc.id);
+                if (doc.data().hasAccount) {
+                    const email = userName + '@readymastery.org'
+                    const password = (token * 10000).toString() + "student"
+                    return signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    setStudentUser(doc.data());
+                    setUser(doc.data());
+                    window.localStorage.setItem("auth", "true");
+                    const studentObj = JSON.stringify(doc.data())
+                    window.localStorage.setItem("student", studentObj);
+                    navigate('/studentDashboard/' + doc.id);
+                }
+
             } else {
                 console.log("No Match")
             }
@@ -47,7 +55,6 @@ export default function AuthContextProvider({ children }) {
         setStudentUser({});
         window.localStorage.setItem("auth", "false");
         window.localStorage.setItem("student", {});
-        console.log(window.localStorage.getItem("auth"));
         navigate('/')
     }
 
@@ -58,14 +65,6 @@ export default function AuthContextProvider({ children }) {
         return signOut(auth);
     };
 
-    // const setStudent = async (studentData) => {
-    //     try {
-    //         await updateDoc(doc(db, "users", studentData._id), { hasStudent: studentData.hasStudent });
-    //         await updateDoc(collection(db, "students"), where("parentID", "===", studentData._id), studentData);
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // }
 
     const createUser = (email, password, firstName, lastName, enabled) => {
         return createUserWithEmailAndPassword(
@@ -73,6 +72,7 @@ export default function AuthContextProvider({ children }) {
             email,
             password,
         ).then((userCredential) => {
+            console.log(`The User is ${userCredential.user}`)
             setDoc(doc(db, "users", userCredential.user.uid), {
                 email: email,
                 _id: userCredential.user.uid,
@@ -84,14 +84,37 @@ export default function AuthContextProvider({ children }) {
     };
 
     const createStudentLogin = (studentInfo) => {
-        auth().createUser({
-            uid: studentInfo.id,
-            password: studentInfo.imageIndex,
-            displayName: studentInfo.userName
+        const email = studentInfo.userName + '@readingmastery.org';
+        const password = (studentInfo * 10000).toString() + "student"
+        return createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        ).then((userCredential) => {
+            
+            setDoc(collection(db, "users", studentInfo._id, "account"), {
+                studentId: userCredential.user.uid,
+                lessonsComplete: [],
+                lessonsAssigned: [],
+                grades: [],
+                avatar: {},
+                awards: {},
+                recordings: {},
+                color: '',
+                book: '',
+                email: email,
+                _id: userCredential.user.uid,
+                firstName: studentInfo.name,
+                lastName: '',
+                parentId: studentInfo.parentID
+            })
+        }).then((userCredential) => {
+            updateDoc(doc(db, "students", studentInfo._id), {
+                hasAccount: true,
+            });
         })
 
     }
-
 
 
     const updateUser = async ({ userData }) => {
@@ -159,7 +182,7 @@ export default function AuthContextProvider({ children }) {
 
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout }}>
+        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin }}>
             {children}
         </UserContext.Provider>
     );
