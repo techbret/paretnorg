@@ -2,6 +2,9 @@
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
+    fontFamily: {
+      'londrina': ['Londrina Solid', 'display']
+    },
     extend: {},
   },
   plugins: [

@@ -19,6 +19,7 @@ export default function AuthContextProvider({ children }) {
     const [profile, setProfile] = useState({})
     const [students, setStudents] = useState([])
     const [studentUser, setStudentUser] = useState({})
+    const [studentProfile, setStudent] = useState('')
 
     const navigate = useNavigate();
 
@@ -28,21 +29,22 @@ export default function AuthContextProvider({ children }) {
 
 
     const studentSignIn = async (userName, token) => {
-        const q = query(collection(db, "students"), where("userName", "==", userName));
+        const q = query(collection(db, "newStudents"), where("userName", "==", userName));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             if (doc.data().imageIndex === token) {
                 if (doc.data().hasAccount) {
-                    const email = userName + '@readymastery.org'
-                    const password = (token * 10000).toString() + "student"
-                    return signInWithEmailAndPassword(auth, email, password);
+                    const email = userName + '@readingmastery.org'
+                    const password = (token * 1000).toString() + "student"
+                    signInWithEmailAndPassword(auth, email, password);
+                    navigate("/student-dashboard" );
                 } else {
                     setStudentUser(doc.data());
                     setUser(doc.data());
                     window.localStorage.setItem("auth", "true");
                     const studentObj = JSON.stringify(doc.data())
                     window.localStorage.setItem("student", studentObj);
-                    navigate('/studentDashboard/' + doc.id);
+                    navigate('/create-student-account/' + doc.id);
                 }
 
             } else {
@@ -55,7 +57,6 @@ export default function AuthContextProvider({ children }) {
         setStudentUser({});
         window.localStorage.setItem("auth", "false");
         window.localStorage.setItem("student", {});
-        navigate('/')
     }
 
 
@@ -72,45 +73,49 @@ export default function AuthContextProvider({ children }) {
             email,
             password,
         ).then((userCredential) => {
-            console.log(`The User is ${userCredential.user}`)
             setDoc(doc(db, "users", userCredential.user.uid), {
                 email: email,
                 _id: userCredential.user.uid,
                 firstName: firstName,
                 lastName: lastName,
-                acceptsMarketing: enabled
+                acceptsMarketing: enabled,
+                hasStudent: false
             });
         });
     };
 
-    const createStudentLogin = (studentInfo) => {
+    const createStudentLogin = (studentInfo, settings) => {
         const email = studentInfo.userName + '@readingmastery.org';
-        const password = (studentInfo * 10000).toString() + "student"
+        const password = (studentInfo.pwnumber * 1000).toString() + "student"
         return createUserWithEmailAndPassword(
             auth,
             email,
             password
         ).then((userCredential) => {
-            
-            setDoc(collection(db, "users", studentInfo._id, "account"), {
+            console.log(`The User is ${studentInfo.name}`)
+            setDoc(doc(db, "students", userCredential.user.uid), {
                 studentId: userCredential.user.uid,
                 lessonsComplete: [],
                 lessonsAssigned: [],
                 grades: [],
-                avatar: {},
+                avatar: {
+                    bgColor: settings.imageColor,
+                    imageIndex: settings.imageIndex
+                },
                 awards: {},
                 recordings: {},
                 color: '',
                 book: '',
                 email: email,
-                _id: userCredential.user.uid,
                 firstName: studentInfo.name,
                 lastName: '',
-                parentId: studentInfo.parentID
-            })
-        }).then((userCredential) => {
-            updateDoc(doc(db, "students", studentInfo._id), {
-                hasAccount: true,
+                parentId: studentInfo.parentID,
+                oldStudentId: studentInfo._id
+            });
+        }).then(() => {
+            const docRef = doc(db, "newStudents", studentInfo._id)
+            updateDoc(docRef, {
+                hasAccount: true
             });
         })
 
@@ -127,8 +132,8 @@ export default function AuthContextProvider({ children }) {
     }
     const createStudent = async (studentData) => {
         try {
-            const docRef = await addDoc(collection(db, 'students'), studentData);
-            await updateDoc(doc(db, "students", docRef.id), { _id: docRef.id })
+            const docRef = await addDoc(collection(db, 'newStudents'), studentData);
+            await updateDoc(doc(db, "newStudents", docRef.id), { _id: docRef.id })
         } catch (err) {
             console.log(err)
         }
@@ -136,7 +141,7 @@ export default function AuthContextProvider({ children }) {
 
     const updateStudent = async (studentData) => {
         try {
-            await updateDoc(doc(db, "students", studentData._id), studentData);
+            await updateDoc(doc(db, "newStudents", studentData._id), studentData);
             await updateDoc(doc(db, "users", user.uid), { hasStudent: true })
         } catch (err) {
             console.log(err.message);
@@ -145,7 +150,7 @@ export default function AuthContextProvider({ children }) {
     }
 
     const getStudent = (id) => {
-        const q = query(collection(db, "students"), where("parentID", "==", id));
+        const q = query(collection(db, "newStudents"), where("parentID", "==", id));
         const unsuscribe = onSnapshot(q, (querySnapshot) => {
             const relatedStudents = [];
             querySnapshot.forEach((doc) => {
@@ -156,18 +161,30 @@ export default function AuthContextProvider({ children }) {
         });
     }
 
+    // const getStudentProfile = (studentId, callback) => {        
+    //     const studentProfile = getDoc(doc(db, "users", "loggedStudents", "students", studentId));
 
+    //     if (studentProfile.exists()) {
+    //         return onSnapshot(doc(db, "users", "loggedStudents", "students", studentId), (doc) => {
+    //             callback(doc.data())
+    //         });
+    //         } 
+    //     }        
+    //   };
 
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            setUser(currentUser);                     
             if (currentUser) {
-                setIsLoggedIn(true);
+                setIsLoggedIn(true);             
                 onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
                     setProfile(doc.data());
                     getStudent(currentUser.uid);
                 });
+                onSnapshot(doc(db, "students", currentUser.uid), (doc) => {
+                    setStudent(doc.data());
+                })
                 console.log('It ran again');
             } else {
                 setIsLoggedIn(false);
@@ -182,7 +199,7 @@ export default function AuthContextProvider({ children }) {
 
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin }}>
+        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin, studentProfile }}>
             {children}
         </UserContext.Provider>
     );

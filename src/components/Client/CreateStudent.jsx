@@ -16,7 +16,8 @@ export default function CreateStudent() {
         userName: userName,
         gradeLevel: gradeLevel,
         imageIndex: imageIndex,
-        _id: id
+        _id: id,
+        pwnumber: imageIndex
     }    
 
     const handleUpdate = (e) => {

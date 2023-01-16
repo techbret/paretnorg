@@ -18,6 +18,8 @@ import StudentLogin from './components/Student/StudentLogin';
 import OurMethod from './components/OurMethod';
 import Resources from './components/Resources';
 import StudentDashboard from './components/Student/StudentDashboard';
+import CreateStudentAccount from './components/Student/CreateStudentAccount';
+import StudentAuthContextProvider from './context/StudentAuthContext';
 
 function App() {
   return (
@@ -39,9 +41,12 @@ function App() {
           <Route path='/student-login' element={<StudentLogin />} />
           <Route path='/our-method' element={<OurMethod />} />
           <Route path='/resources' element={<Resources />} />
-          <Route path='/studentDashboard/:id' element={<StudentDashboard />} />
+          <Route path='/create-student-account/:id' element={<CreateStudentAccount />} />
+          <Route path='/student-dashboard' element={<StudentDashboard />} />
+
         </Routes>
       </AuthContextProvider>
+
 
     </div>
   );

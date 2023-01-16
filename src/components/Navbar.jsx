@@ -32,7 +32,7 @@ function classNames(...classes) {
 export default function NavBar() {
   const { logout, isLoggedIn } = UserAuth();
 
-  if (isLoggedIn) {
+  if (isLoggedIn || window.localStorage.getItem("auth") === "true") {
     return <></>
 
   } else {
