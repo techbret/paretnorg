@@ -37,7 +37,7 @@ export default function AuthContextProvider({ children }) {
                     const email = userName + '@readingmastery.org'
                     const password = (token * 1000).toString() + "student"
                     signInWithEmailAndPassword(auth, email, password);
-                    navigate("/student-dashboard" );
+                    navigate("/student-dashboard");
                 } else {
                     setStudentUser(doc.data());
                     setUser(doc.data());
@@ -92,26 +92,33 @@ export default function AuthContextProvider({ children }) {
             email,
             password
         ).then((userCredential) => {
-            console.log(`The User is ${studentInfo.name}`)
-            setDoc(doc(db, "students", userCredential.user.uid), {
-                studentId: userCredential.user.uid,
-                lessonsComplete: [],
-                lessonsAssigned: [],
-                grades: [],
-                avatar: {
-                    bgColor: settings.imageColor,
-                    imageIndex: settings.imageIndex
-                },
-                awards: {},
-                recordings: {},
-                color: '',
-                book: '',
-                email: email,
-                firstName: studentInfo.name,
-                lastName: '',
-                parentId: studentInfo.parentID,
-                oldStudentId: studentInfo._id
-            });
+            console.log(`The User is ${studentInfo.name}`)           
+            const getStudentGradeLevel = async () => {
+                const lessonQuery = await getDoc(doc(db, "lessons", studentInfo.gradeLevel));
+                const lessonPlans = lessonQuery.data().lessons;
+                const lesPlan = lessonPlans.slice(0, 3);
+                setDoc(doc(db, "students", userCredential.user.uid), {
+                    studentId: userCredential.user.uid,
+                    lessonsComplete: {},
+                    lessonsAssigned: lesPlan,
+                    grades: [],
+                    avatar: {
+                        bgColor: settings.imageColor,
+                        imageIndex: settings.imageIndex
+                    },
+                    awards: {},
+                    recordings: {},
+                    color: '',
+                    book: '',
+                    email: email,
+                    firstName: studentInfo.name,
+                    lastName: '',
+                    parentId: studentInfo.parentID,
+                    oldStudentId: studentInfo._id
+                });
+            }
+            getStudentGradeLevel();      
+            
         }).then(() => {
             const docRef = doc(db, "newStudents", studentInfo._id)
             updateDoc(docRef, {
@@ -175,9 +182,9 @@ export default function AuthContextProvider({ children }) {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);                     
+            setUser(currentUser);
             if (currentUser) {
-                setIsLoggedIn(true);             
+                setIsLoggedIn(true);
                 onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
                     setProfile(doc.data());
                     getStudent(currentUser.uid);
