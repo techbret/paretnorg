@@ -2,10 +2,10 @@ import book1 from './book1.png'
 import book2 from './book2.png'
 import book3 from './book3.png'
 import book4 from './book4.png'
-import book1Unearned from './book1Unearned.png'
-import book2Unearned from './book2Unearned.png'
-import book3Unearned from './book3Unearned.png'
-import book4Unearned from './book4Unearned.png'
+import book5 from './book5.png'
+import book6 from './book6.png'
+import book7 from './book7.png'
+import book8 from './book8.png'
 
 
 const books = [
@@ -24,6 +24,22 @@ const books = [
     {
         title: "Speed Reader",
         source: book4,
+    },
+    {
+        title: "Speed Reader",
+        source: book5,
+    },
+    {
+        title: "Speed Reader",
+        source: book6,
+    },
+    {
+        title: "Speed Reader",
+        source: book7,
+    },
+    {
+        title: "Speed Reader",
+        source: book8,
     },
 
 ]

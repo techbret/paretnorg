@@ -1,11 +1,12 @@
 import React from 'react';
 import { UserAuth } from '../../context/AuthContext';
-import StudentNavBar from './StudentNavBar';
 import spaceBG from '../../assets/space-background.jpg'
 import startButton from '../../assets/gameIcons/startButton.png'
 import locked from '../../assets/gameIcons/lockedIcon.png'
 import ready from '../../assets/gameIcons/readyIcon.png'
 import threeStars from '../../assets/gameIcons/finishedThreeStars.png'
+import oneStar from '../../assets/gameIcons/finishedOneStar.png'
+import twoStars from '../../assets/gameIcons/finishedTwoStars.png'
 import settings from '../../assets/gameIcons/settings.png'
 import dailyStatus from '../../assets/gameIcons/dailyStatusBar.png'
 import dailyStatusProgress from '../../assets/gameIcons/dailyProgress.png'
@@ -16,13 +17,29 @@ import liveStatusProgress from '../../assets/gameIcons/livesProgress.png'
 import files from "../../assets/Avatars";
 import books from "../../assets/books"
 import playButton from '../../assets/playButton.png'
+import { useNavigate } from 'react-router-dom';
 
 export default function StudentDashboard() {
 
   // const  profile = useStudents(studentId);
   // const profile = useStudents(user.uid);
 
-  const { studentProfile } = UserAuth();
+  const { studentProfile, logout, startLesson } = UserAuth();
+  const navigate = useNavigate();
+
+  const lesScores = [locked, ready, oneStar, twoStars, threeStars]
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
+    navigate('/');
+  }
+
+  const handleStart = () => {
+    const lessonRef = studentProfile?.currentLesson
+    startLesson(studentProfile.lessonsAssigned[lessonRef].path)
+  }
+
 
 
 
@@ -51,14 +68,31 @@ export default function StudentDashboard() {
             <div className='p-6 bg-blue-300 bg-opacity-50 rounded-md shadow-xl mt-12'>
               <p className='text-white font-londrina xl:text-3xl text-lg drop-shadow-md p-2  rounded-lg text-center bg-blue-700'>Awards</p>
               <div className='grid grid-cols-4 gap-4 mt-4'>
-                <img src={books[0].source} className="h-24 opacity-100" alt="" />
-                <img src={books[1].source} className="h-24 opacity-25" alt="" />
-                <img src={books[2].source} className="h-24 opacity-25" alt="" />
-                <img src={books[3].source} className="h-24 opacity-25" alt="" />
-                <img src={books[0].source} className="h-24 opacity-25" alt="" />
-                <img src={books[1].source} className="h-24 opacity-25" alt="" />
-                <img src={books[2].source} className="h-24 opacity-25" alt="" />
-                <img src={books[3].source} className="h-24 opacity-25" alt="" />
+                {studentProfile?.awards?.hasAwards ? (
+                  <>
+                    {studentProfile?.awards?.books.map((book, index) => (
+                      <div key={index}>
+                        <img src={books[index].source} className="h-24 opacity-100" alt="" />
+                      </div>
+                    ))}
+                    {studentProfile?.awards?.booksToEarn.map((book, index) => (
+                      <div key={index}>
+                        <img src={books[book].source} className="h-24 opacity-25" alt="" />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <img src={books[0].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[1].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[2].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[3].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[4].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[5].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[6].source} className="h-24 opacity-25" alt="" />
+                    <img src={books[7].source} className="h-24 opacity-25" alt="" />
+                  </>
+                )}
 
               </div>
             </div>
@@ -66,12 +100,11 @@ export default function StudentDashboard() {
           <div className='bg-black-80 opacity-50'></div>
           <div className='flex justify-center items-center h-full'>
             <div className='grid grid-cols-4 gap-4 mx-auto '>
-              <div className='text-white xl:text-7xl text-5xl text-center font-medium col-span-4 font-londrina drop-shadow-lg '>Welcome, {studentProfile?.firstName}</div>
-              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={threeStars} alt="" /></button></div>
-              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={ready} alt="" /></button></div>
-              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={locked} alt="" /></button></div>
-              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={locked} alt="" /></button></div>
-              <button className='col-span-4 w-72 mx-auto hover:opacity-75'><img src={startButton} alt="" /></button>
+              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score1]} alt="" /></button></div>
+              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score2]} alt="" /></button></div>
+              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score3]} alt="" /></button></div>
+              <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score4]} alt="" /></button></div>
+              <button className='col-span-4 w-72 mx-auto hover:opacity-75' onClick={handleStart}><img src={startButton} alt="" /></button>
             </div>
 
 
@@ -82,10 +115,16 @@ export default function StudentDashboard() {
 
         <div >
           <div className='absolute top-0 right-10 lg:block hidden'>
+            <button
+              type="button"
+              className="mt-8 -mb-12 ml-60 inline-flex font-londrina items-center px-6 py-3 border border-transparent text-3xl font-medium rounded-full shadow-sm text-gray-600 bg-yellow-300 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+            <button className='text-sm font-semibold leading-6 shadow-sm absolute right-0 top-4'><img className='h-24' src={settings} alt="" /></button>
 
-            <button className='text-sm font-semibold leading-6 text-gray-900 shadow-sm absolute right-0 top-4'><img className='h-24' src={settings} alt="" /></button>
-
-            <div className='mt-36'>
+            <div className='mt-24'>
               <p className='text-white font-londrina xl:text-3xl text-lg drop-shadow-md p-2 rounded-lg text-center bg-blue-500'>My recordings</p>
               <div className='grid grid-cols-4 gap-2 mt-4 bg-lime-200 p-2 rounded-lg'>
                 <button><img src={playButton} className="h-12 col-span-1" alt="" /></button>

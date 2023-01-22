@@ -88,14 +88,13 @@ export default function CreateStudent() {
                                             onChange={(e) => (setGradeLevel(e.target.value))}
 
                                         >
-                                            <option>Pre-School</option>
-                                            <option>Kindergarten</option>
-                                            <option>1st Grade</option>
-                                            <option>2nd Grade</option>
-                                            <option>3rd Grade</option>
-                                            <option>4th Grade</option>
-                                            <option>5th Grade</option>
-                                            <option>6th Grade +</option>
+                                            
+                                            <option value="k">Kindergarten</option>
+                                            <option value="1">1st Grade</option>
+                                            <option value="2">2nd Grade</option>
+                                            <option value="3">3rd Grade</option>
+                                            <option value="4">4th Grade</option>
+                                            <option value="5">5th Grade</option>
                                             
                                             <option disabled>Current Grade Level</option>
                                         </select>
