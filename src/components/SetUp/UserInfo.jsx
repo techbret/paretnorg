@@ -21,17 +21,15 @@ export default function UserInfo() {
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== passwordConfirmation) {
             alert('Passwords do not match!')
         } else {
-            createUser(email, password, firstName, lastName, enabled);
+            await createUser(email, password, firstName, lastName, enabled);
             navigate('/more-info');
-
         }
     }
-
 
     return (
         <div className='overflow-hidden bg-white py-16 px-4 sm:px-6 lg:px-8 lg:py-24'>
@@ -50,7 +48,7 @@ export default function UserInfo() {
                                 autoComplete="first-name"
                                 className="block w-full border-0 p-0 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-md font-bold"
                                 placeholder="First Name"
-                                onChange={(e) => {setFirstName(e.target.value)}}
+                                onChange={(e) => { setFirstName(e.target.value) }}
                             />
                         </div>
                     </div>
@@ -64,7 +62,7 @@ export default function UserInfo() {
                                 autoComplete="family-name"
                                 className="block w-full border-0 p-0 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-md font-bold"
                                 placeholder="Last Name"
-                                onChange={(e) => {setLastName(e.target.value)}}
+                                onChange={(e) => { setLastName(e.target.value) }}
                             />
                         </div>
                     </div>
@@ -78,7 +76,7 @@ export default function UserInfo() {
                                 autoComplete="password"
                                 className="block w-full border-0 p-0 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-md font-bold"
                                 placeholder="Password"
-                                onChange={(e) => {setPassword(e.target.value)}}
+                                onChange={(e) => { setPassword(e.target.value) }}
                             />
                         </div>
                     </div>
@@ -92,7 +90,7 @@ export default function UserInfo() {
                                 autoComplete="passwordConfirmation"
                                 className="block w-full border-0 p-0 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-md font-bold"
                                 placeholder="Repeat Password"
-                                onChange={(e) => {setPasswordConfirmation(e.target.value)}}
+                                onChange={(e) => { setPasswordConfirmation(e.target.value) }}
                             />
                         </div>
                     </div>
@@ -104,7 +102,7 @@ export default function UserInfo() {
                                 name="comments"
                                 type="checkbox"
                                 className="h-4 w-4 rounded border-gray-300 text-yellow-400 focus:ring-yellow-300"
-                                onChange={(e) => {setEnabled(true)}}
+                                onChange={(e) => { setEnabled(true) }}
                             />
                         </div>
                         <div className="ml-3 text-sm">

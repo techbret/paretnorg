@@ -5,7 +5,7 @@ import { UserAuth } from '../../context/AuthContext'
 export default function CreateStudent() {
     const { students, updateStudent } = UserAuth()
     const [name, setName] = useState(students[0].name);
-    const [userName, setUserName] = useState('');
+    const [userName, setUserName] = useState(students[0].userName);
     const [gradeLevel, setGradeLevel] = useState('');
     const [imageIndex, setImageIndex] = useState();
 
@@ -15,11 +15,10 @@ export default function CreateStudent() {
         name: name || students[0].name,
         userName: userName,
         gradeLevel: gradeLevel,
-        imageIndex: imageIndex,
         _id: id
     }
 
-    
+
 
     const handleUpdate = (e) => {
         e.preventDefault();
@@ -75,12 +74,12 @@ export default function CreateStudent() {
                                 <div className="relative rounded-md border border-gray-300 shadow-sm focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500 sm:col-span-1 col-span-2">
 
                                     <div className="mt-1">
-                                    <label
-                                        htmlFor="name"
-                                        className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-sm font-medium text-gray-900"
-                                    >
-                                        Grade Level
-                                    </label>
+                                        <label
+                                            htmlFor="name"
+                                            className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-sm font-medium text-gray-900"
+                                        >
+                                            Grade Level
+                                        </label>
                                         <select
                                             id="location"
                                             name="location"
@@ -89,55 +88,42 @@ export default function CreateStudent() {
                                             onChange={(e) => (setGradeLevel(e.target.value))}
 
                                         >
-                                            <option>Pre-School</option>
-                                            <option>Kindergarten</option>
-                                            <option>1st Grade</option>
-                                            <option>2nd Grade</option>
-                                            <option>3rd Grade</option>
-                                            <option>4th Grade</option>
-                                            <option>5th Grade</option>
-                                            <option>6th Grade +</option>
-                                            
+
+                                            <option value="k">Kindergarten</option>
+                                            <option value="1">1st Grade</option>
+                                            <option value="2">2nd Grade</option>
+                                            <option value="3">3rd Grade</option>
+                                            <option value="4">4th Grade</option>
+                                            <option value="5">5th Grade</option>
+
                                             <option disabled>Current Grade Level</option>
                                         </select>
 
                                     </div>
-                                </div>                             
+                                </div>
 
 
                                 <div className='sm:col-span-2'>
-                                    <p className='text-lg font-semibold col-span-2 sm:mt-8 text-center sm:text-left'>Select a <span className='text-emerald-500 '>Login Image</span> for your Student</p>
-                                    <p className='col-span-2 text-center sm:text-left'>Students do not use passwords, we use images to ensure the privacy and safety of your student</p>
+                                    <p className='text-lg font-semibold col-span-2 sm:mt-8 text-center'>The current <span className='text-emerald-500 '>Login Image</span> for your Student</p>
+                                    <p className='col-span-2 text-center'>Students do not use passwords, we use images to ensure the privacy and safety of your student</p>
+                                    <p className='col-span-2 text-center text-red-400'>To change your students Login Image you must contact a member of our security team at <span className='font-bold'>security@readingmastery.org</span></p>
 
                                     <div>
-
-                                        <ul role="list" className="grid grid-cols-4 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-8 xl:gap-x-8 mt-4">
-                                            {files.map((file, index) => (
-                                                <li key={file.source} className="relative">
-                                                    <div className="group aspect-w-10 aspect-h-10 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-                                                        <img src={file.source} alt="" className="pointer-events-none object-cover group-hover:opacity-75" />
-                                                        <button type="button" className="absolute inset-0 focus:outline-none" onClick={() => setImageIndex(index)}>
-                                                            <span className="sr-only text-center">View details for {file.title}</span>
-                                                        </button>
-                                                    </div>
-                                                    <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900 text-center">{file.title}</p>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <img src={files[students[0]?.imageIndex].source} alt="" className="h-36 w-36 bg-gray-100 mx-auto mt-5" />
 
                                     </div>
 
                                 </div>
 
                                 <div className="mt-5 sm:mt-6 col-span-2 mx-auto">
-                  <button
-                    type="button"
-                    className=" rounded-md border border-transparent bg-emerald-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:text-sm"
-                    onClick={handleUpdate}
-                  >
-                    Save Student
-                  </button>
-                </div>
+                                    <button
+                                        type="button"
+                                        className=" rounded-md border border-transparent bg-emerald-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:text-sm"
+                                        onClick={handleUpdate}
+                                    >
+                                        Save Student
+                                    </button>
+                                </div>
 
 
 
