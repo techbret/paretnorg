@@ -21,6 +21,10 @@ import StudentDashboard from './components/Student/StudentDashboard';
 import CreateStudentAccount from './components/Student/CreateStudentAccount';
 import StudentLesson from './components/Student/StudentLesson';
 import StudentQuiz from './components/Student/StudentQuiz';
+import StudentRecord from './components/Student/StudentRecord';
+import Upload from './components/Upload';
+import Quiz from './components/Student/Quiz';
+import QuizCreation from './components/Admin/QuizCreation';
 function App() {
   return (
     <div>
@@ -45,6 +49,11 @@ function App() {
           <Route path='/student-dashboard' element={<StudentDashboard />} />
           <Route path='/student-lesson/:doc/:grade/:day/:lesson' element={<StudentLesson />} />
           <Route path='/student-quiz/:doc/:grade/:day/:lesson' element={<StudentQuiz />} />
+          <Route path='/student-record' element={<StudentRecord />} />
+          <Route path='/upload' element={<Upload />} />
+
+          <Route path='/quiz' element={<Quiz />} />
+          <Route path='/admin-quiz-maker' element={<QuizCreation />} />
           
         </Routes>
       </AuthContextProvider>

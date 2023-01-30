@@ -37,7 +37,8 @@ export default function StudentDashboard() {
 
   const handleStart = () => {
     const lessonRef = studentProfile?.currentLesson
-    startLesson(studentProfile.lessonsAssigned[lessonRef].path)
+    console.log(`The lessonRef is : ${lessonRef}`)
+    startLesson(studentProfile?.lessonsAssigned[lessonRef].path)
   }
 
 
@@ -98,13 +99,15 @@ export default function StudentDashboard() {
             </div>
           </div>
           <div className='bg-black-80 opacity-50'></div>
+          
           <div className='flex justify-center items-center h-full'>
             <div className='grid grid-cols-4 gap-4 mx-auto '>
+            <div className='text-white sm:text-7xl text-5xl font-londrina mx-auto mb-4 col-span-4'>Welcome, {studentProfile?.firstName}</div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score1]} alt="" /></button></div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score2]} alt="" /></button></div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score3]} alt="" /></button></div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score4]} alt="" /></button></div>
-              <button className='col-span-4 w-72 mx-auto hover:opacity-75' onClick={handleStart}><img src={startButton} alt="" /></button>
+              <button className='col-span-4 w-72 mx-auto hover:focus-ring hover:ring-4 hover:ring-yellow-500 rounded-full p-1' onClick={handleStart}><img src={startButton} alt="" /></button>
             </div>
 
 

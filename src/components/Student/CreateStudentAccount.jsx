@@ -38,7 +38,7 @@ export default function CreateStudentAccount() {
     const handleCreate = () => {
         createStudentLogin(student, settings);
         studentLogout();
-        navigate('/student-dashboard/' + student._id)
+        navigate('/student-dashboard/')
 
     };
 

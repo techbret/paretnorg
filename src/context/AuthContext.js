@@ -43,10 +43,11 @@ export default function AuthContextProvider({ children }) {
                 } else {
                     setStudentUser(doc.data());
                     setUser(doc.data());
+                    console.log(doc.data())
                     window.localStorage.setItem("auth", "true");
                     const studentObj = JSON.stringify(doc.data())
                     window.localStorage.setItem("student", studentObj);
-                    navigate('/student-dashboard');
+                    navigate('/create-student-account/' + doc.data()._id);
                 }
 
             } else {
@@ -70,19 +71,22 @@ export default function AuthContextProvider({ children }) {
 
 
     const createUser = (email, password, firstName, lastName, enabled) => {
-        return createUserWithEmailAndPassword(
-            auth,
-            email,
-            password,
-        ).then((userCredential) => {
-            setDoc(doc(db, "users", userCredential.user.uid), {
-                email: email,
-                _id: userCredential.user.uid,
-                firstName: firstName,
-                lastName: lastName,
-                acceptsMarketing: enabled,
-                hasStudent: false
-            });
+        return new Promise((resolve, reject) => {
+            createUserWithEmailAndPassword(
+                auth,
+                email,
+                password,
+            ).then((userCredential) => {
+                setDoc(doc(db, "users", userCredential.user.uid), {
+                    email: email,
+                    _id: userCredential.user.uid,
+                    firstName: firstName,
+                    lastName: lastName,
+                    acceptsMarketing: enabled,
+                    hasStudent: false
+                });
+                resolve();
+            }).catch(error => reject(error));
         });
     };
 
@@ -106,8 +110,9 @@ export default function AuthContextProvider({ children }) {
                 setDoc(doc(db, "students", userCredential.user.uid), {
                     studentId: userCredential.user.uid,
                     lessonsComplete: {},
-                    lessonScores: { score1: 1, score2: 0, score3: 0, score4: 4},
+                    lessonScores: { score1: 1, score2: 0, score3: 0, score4: 0 },
                     lessonsAssigned: lesPlan,
+                    currentLesson: 0,
                     grades: [],
                     avatar: {
                         bgColor: settings.imageColor,
@@ -138,6 +143,19 @@ export default function AuthContextProvider({ children }) {
 
     }
 
+    const getLessons = (grade, day, callback) => {
+        const q = query(
+          collection(db, "lessons", grade, day)
+        );
+        return onSnapshot(q, (querySnapshot) => {
+          const lessons = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          callback(lessons);
+        });
+      };
+
     const uploadVideos = (vids) => {
         console.log('uploading')
         const day = "3";
@@ -149,10 +167,10 @@ export default function AuthContextProvider({ children }) {
                     storage,
                     `/kindergarten/day${day}/` + file.name.slice(0, -13)
                 );
-                uploadBytes(videoRef, file);
+                // uploadBytes(videoRef, file);
                 console.log(`setting doc: ${file}`)
                 setDoc(doc(db, "lessons", "k", `day${day}`, count.toString()), {
-                    lessonVideo: `/kindergarten/day${day}/`+ file.name.slice(0, -13),
+                    lessonVideo: `/kindergarten/day${day}/` + file.name.slice(0, -13),
                     title: file.name.slice(0, -13).replace(/[^a-zA-Z0-9 ]/gi, ' ').slice(8),
                     gradeLevel: "kindergarten",
                     quiz: [],
@@ -161,16 +179,16 @@ export default function AuthContextProvider({ children }) {
                     imageRef: "",
                     lessonNumber: count
                 })
-                count ++
+                count++
             } else if (count > 31 && count < 60) {
                 const videoRef = ref(
                     storage,
                     `/firstGrade/day${day}/` + file.name.slice(0, -13)
                 );
-                uploadBytes(videoRef, file);
-                console.log(`setting doc: ${file}`)
+                // uploadBytes(videoRef, file);
+                console.log(`setting doc: ${file} and ${count.toString()}`)
                 setDoc(doc(db, "lessons", "1", `day${day}`, count.toString()), {
-                    lessonVideo: `/firstGrade/day${day}/`+ file.name.slice(0, -13),
+                    lessonVideo: `/firstGrade/day${day}/` + file.name.slice(0, -13),
                     title: file.name.slice(0, -13).replace(/[^a-zA-Z0-9 ]/gi, ' ').slice(8),
                     gradeLevel: "kindergarten",
                     quiz: [],
@@ -179,17 +197,17 @@ export default function AuthContextProvider({ children }) {
                     imageRef: "",
                     lessonNumber: count
                 })
-                count ++
+                count++
 
             } else if (count > 59 && count < 86) {
                 const videoRef = ref(
                     storage,
                     `/secondGrade/day${day}/` + file.name.slice(0, -13)
                 );
-                uploadBytes(videoRef, file);
+                // uploadBytes(videoRef, file);
                 console.log(`setting doc: ${file}`)
                 setDoc(doc(db, "lessons", "2", `day${day}`, count.toString()), {
-                    lessonVideo: `/secondGrade/day${day}/`+ file.name.slice(0, -13),
+                    lessonVideo: `/secondGrade/day${day}/` + file.name.slice(0, -13),
                     title: file.name.slice(0, -13).replace(/[^a-zA-Z0-9 ]/gi, ' ').slice(8),
                     gradeLevel: "kindergarten",
                     quiz: [],
@@ -198,17 +216,17 @@ export default function AuthContextProvider({ children }) {
                     imageRef: "",
                     lessonNumber: count
                 })
-                count ++
+                count++
 
             } else if (count > 85 && count < 111) {
                 const videoRef = ref(
                     storage,
                     `/thirdGrade/day${day}/` + file.name.slice(0, -13)
                 );
-                uploadBytes(videoRef, file);
+                // uploadBytes(videoRef, file);
                 console.log(`setting doc: ${file}`)
                 setDoc(doc(db, "lessons", "3", `day${day}`, count.toString()), {
-                    lessonVideo: `/thirdGrade/day${day}/`+ file.name.slice(0, -13),
+                    lessonVideo: `/thirdGrade/day${day}/` + file.name.slice(0, -13),
                     title: file.name.slice(0, -13).replace(/[^a-zA-Z0-9 ]/gi, ' ').slice(8),
                     gradeLevel: "kindergarten",
                     quiz: [],
@@ -217,17 +235,17 @@ export default function AuthContextProvider({ children }) {
                     imageRef: "",
                     lessonNumber: count
                 })
-                count ++                
+                count++
 
             } else if (count > 110 && count < 135) {
                 const videoRef = ref(
                     storage,
                     `/fourthGrade/day${day}/` + file.name.slice(0, -13)
                 );
-                uploadBytes(videoRef, file);
+                // uploadBytes(videoRef, file);
                 console.log(`setting doc: ${file}`)
                 setDoc(doc(db, "lessons", "4", `day${day}`, count.toString()), {
-                    lessonVideo: `/fourthGrade/day${day}/`+ file.name.slice(0, -13),
+                    lessonVideo: `/fourthGrade/day${day}/` + file.name.slice(0, -13),
                     title: file.name.slice(0, -13).replace(/[^a-zA-Z0-9 ]/gi, ' ').slice(9),
                     gradeLevel: "kindergarten",
                     quiz: [],
@@ -236,17 +254,17 @@ export default function AuthContextProvider({ children }) {
                     imageRef: "",
                     lessonNumber: count
                 })
-                count ++  
+                count++
 
             } else {
                 const videoRef = ref(
                     storage,
                     `/fifthGrade/day${day}/` + file.name.slice(0, -13)
                 );
-                uploadBytes(videoRef, file);
+                // uploadBytes(videoRef, file);
                 console.log(`setting doc: ${file}`)
                 setDoc(doc(db, "lessons", "5", `day${day}`, count.toString()), {
-                    lessonVideo: `/fifthGrade/day${day}/`+ file.name.slice(0, -13),
+                    lessonVideo: `/fifthGrade/day${day}/` + file.name.slice(0, -13),
                     title: file.name.slice(0, -13).replace(/[^a-zA-Z0-9 ]/gi, ' ').slice(9),
                     gradeLevel: "kindergarten",
                     quiz: [],
@@ -255,10 +273,10 @@ export default function AuthContextProvider({ children }) {
                     imageRef: "",
                     lessonNumber: count
                 })
-                count ++
+                count++
 
             }
-            
+
         }
 
 
@@ -317,7 +335,7 @@ export default function AuthContextProvider({ children }) {
         }
     }
 
-   
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -344,7 +362,7 @@ export default function AuthContextProvider({ children }) {
 
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin, studentProfile, uploadVideos, startLesson, currentLesson, currentVideo }}>
+        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin, studentProfile, uploadVideos, startLesson, currentLesson, currentVideo, getLessons }}>
             {children}
         </UserContext.Provider>
     );
