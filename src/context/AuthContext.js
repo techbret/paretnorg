@@ -143,6 +143,20 @@ export default function AuthContextProvider({ children }) {
 
     }
 
+    const submitQuiz = async (quizData, lines) => {
+        try {
+          await updateDoc(doc(db, "lessons", quizData.grade, quizData.day, quizData.lessonNumber), {
+            title: quizData.title,
+            grade: quizData.grade,
+            lyrics: quizData.lyrics,
+            lyricLines: lines,
+            quiz: quizData.questions
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
     const getLessons = (grade, day, callback) => {
         const q = query(
           collection(db, "lessons", grade, day)
@@ -362,7 +376,7 @@ export default function AuthContextProvider({ children }) {
 
 
     return (
-        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin, studentProfile, uploadVideos, startLesson, currentLesson, currentVideo, getLessons }}>
+        <UserContext.Provider value={{ createUser, signIn, logout, createStudent, profile, updateUser, isLoggedIn, students, updateStudent, studentSignIn, studentLogout, studentUser, createStudentLogin, studentProfile, uploadVideos, startLesson, currentLesson, currentVideo, getLessons, submitQuiz }}>
             {children}
         </UserContext.Provider>
     );

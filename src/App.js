@@ -25,6 +25,7 @@ import StudentRecord from './components/Student/StudentRecord';
 import Upload from './components/Upload';
 import Quiz from './components/Student/Quiz';
 import QuizCreation from './components/Admin/QuizCreation';
+import AdminLogin from './components/Admin/AdminLogin';
 function App() {
   return (
     <div>
@@ -51,6 +52,7 @@ function App() {
           <Route path='/student-quiz/:doc/:grade/:day/:lesson' element={<StudentQuiz />} />
           <Route path='/student-record' element={<StudentRecord />} />
           <Route path='/upload' element={<Upload />} />
+          <Route path='/admin' element={<AdminLogin />} />
 
           <Route path='/quiz' element={<Quiz />} />
           <Route path='/admin-quiz-maker' element={<QuizCreation />} />
