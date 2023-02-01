@@ -26,6 +26,7 @@ import Upload from './components/Upload';
 import Quiz from './components/Student/Quiz';
 import QuizCreation from './components/Admin/QuizCreation';
 import AdminLogin from './components/Admin/AdminLogin';
+import SubmitLessons from './components/Admin/SubmitLessons';
 function App() {
   return (
     <div>
@@ -56,6 +57,8 @@ function App() {
 
           <Route path='/quiz' element={<Quiz />} />
           <Route path='/admin-quiz-maker' element={<QuizCreation />} />
+          <Route path='/submit' element={<SubmitLessons />} />
+          
           
         </Routes>
       </AuthContextProvider>
