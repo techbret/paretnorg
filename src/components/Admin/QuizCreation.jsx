@@ -1,5 +1,5 @@
 import { CloudArrowUpIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,52 +8,76 @@ import { useLessons } from "../../hooks/useLessons";
 import lessonsJSON from "./lessons.json";
 import Modal from "./Modal";
 
-const grades = ["k", "1", "2", "3", "4", "5"];
-const days = ["day1", "day2", "day3"];
+const grades = ["Select a grade", "k", "1", "2", "3", "4", "5"];
+const days = ["Select a Day", "day1", "day2", "day3"];
 
 export default function QuizCreation() {
   const [text, setText] = useState("");
   const [json, setJson] = useState({});
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([]);
-  const { submitQuiz } = UserAuth();
+  const { submitQuiz, allLessons, updateLessonSubmit } = UserAuth();
+  const [openLibrary, setOpenLibrary] = useState(false)
 
   const [selectedGrade, setSelectedGrade] = useState(grades[0]);
   const [selectedDay, setSelectedDay] = useState(days[0]);
   const [selectedLesson, setSelectedLesson] = useState(days[0]);
   const [lessons, setLessons] = useState();
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [errorColor, setErrorColor] = useState('green')
+  const [errorColor, setErrorColor] = useState("green");
 
   const getLessons = (grade, day) => {
     if (grade === "k") {
-        const lessons = lessonsJSON.filter(lesson => lesson.readingLevel === "Kindergarten");
-        setLessons(lessons);
+      const lessons = lessonsJSON.filter(
+        (lesson) => lesson.readingLevel === "Kindergarten"
+      );
+      setLessons(lessons);
     } else if (grade === "1") {
-        const lessons = lessonsJSON.filter(lesson => lesson.readingLevel === "First Grade");
-        setLessons(lessons);
+      const lessons = lessonsJSON.filter(
+        (lesson) => lesson.readingLevel === "First Grade"
+      );
+      setLessons(lessons);
     } else if (grade === "2") {
-        const lessons = lessonsJSON.filter(lesson => lesson.readingLevel === "Second Grade");
-        setLessons(lessons);
+      const lessons = lessonsJSON.filter(
+        (lesson) => lesson.readingLevel === "Second Grade"
+      );
+      setLessons(lessons);
     } else if (grade === "3") {
-        const lessons = lessonsJSON.filter(lesson => lesson.readingLevel === "Third Grade");
-        setLessons(lessons);
+      const lessons = lessonsJSON.filter(
+        (lesson) => lesson.readingLevel === "Third Grade"
+      );
+      setLessons(lessons);
     } else if (grade === "4") {
-        const lessons = lessonsJSON.filter(lesson => lesson.readingLevel === "Fourth Grade");
-        setLessons(lessons);
+      const lessons = lessonsJSON.filter(
+        (lesson) => lesson.readingLevel === "Fourth Grade"
+      );
+      setLessons(lessons);
     } else if (grade === "5") {
-        const lessons = lessonsJSON.filter(lesson => lesson.readingLevel === "Fifth Grade");
-        setLessons(lessons);
+      const lessons = lessonsJSON.filter(
+        (lesson) => lesson.readingLevel === "Fifth Grade"
+      );
+      setLessons(lessons);
     } else {
-        setLessons(lessonsJSON)
+      setLessons(lessonsJSON);
     }
-};
+  };
+
+  const lessonData = {
+    id: selectedLesson,
+    day: selectedDay
+
+  }
+
+
+  const handleUpdateLes = () => {
+    updateLessonSubmit(lessonData)
+  }
 
   useEffect(() => {
-      const unsubscribe = getLessons(selectedGrade, selectedDay, setLessons);
-      return unsubscribe;
-    }, [selectedGrade, selectedDay]);
+    const unsubscribe = getLessons(selectedGrade, selectedDay, setLessons);
+    return unsubscribe;
+  }, [selectedGrade, selectedDay]);
 
   let quizData = {
     day: selectedDay,
@@ -74,11 +98,11 @@ export default function QuizCreation() {
 
   const handleLessonChange = (e) => {
     setSelectedLesson(e.target.value);
-    const titleID = parseInt(e.target.value)
-    const selectedLesson = lessonsJSON.find(lesson => lesson.id === titleID);
+    const titleID = parseInt(e.target.value);
+    const selectedLesson = lessonsJSON.find((lesson) => lesson.id === titleID);
     setTitle(selectedLesson ? selectedLesson.title : "");
     console.log(e.target.value);
-};
+  };
 
   const handleChange = (event) => {
     setText(event.target.value);
@@ -88,19 +112,23 @@ export default function QuizCreation() {
     event.preventDefault();
     const lines = text.split("\n");
     setJson({ lines, title, questions });
-    submitQuiz(quizData, lines, {}).then(() => {
+    handleUpdateLes();
+    submitQuiz(quizData, lines, {})
+      .then(() => {
         setSuccessMessage("Quiz submitted successfully!");
         setSubmitted(true);
-        setText('');
+        setText("");
         setQuestions([]);
         setJson({});
         setTitle("");
-        setErrorColor('green')
+        setSelectedDay(days[0]);
+        setSelectedGrade(grades[0]);
+        setErrorColor("green");
       })
-      .catch(error => {
-        setSuccessMessage('Quiz was not submitted successfully');
+      .catch((error) => {
+        setSuccessMessage("Quiz was not submitted successfully");
         setSubmitted(true);
-        setErrorColor('red')
+        setErrorColor("red");
       });
   };
 
@@ -117,9 +145,9 @@ export default function QuizCreation() {
     // Scroll to the bottom of the page
     window.scrollTo({
       top: document.body.scrollHeight,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
-};
+  };
 
   const handleRemoveQuestion = (index) => {
     const updatedQuestions = [...questions].filter(
@@ -148,35 +176,71 @@ export default function QuizCreation() {
 
   return (
     <>
-{submitted ? (
-
-<div className={`rounded-md p-4 max-w-5xl mx-auto mt-10 bg-${errorColor}-50`}>
-      <div className="flex">
-        <div className="flex-shrink-0">
-          <CheckCircleIcon className={`h-5 w-5 text-${errorColor}-400`} aria-hidden="true" />
-        </div>
-        <div className="ml-3">
-          <h3 className={`text-sm font-medium text-${errorColor}-800`}>{successMessage}</h3>
-          <div className={`mt-2 text-sm text-${errorColor}-700`}>
-            <p>If you need to update this quiz or you think you made a mistake, simply do it again and it will update to the new information</p>
-          </div>
-          <div className="mt-4">
-            <div className="-mx-2 -my-1.5 flex">
-              <button
-                type="button"
-                className={`ml-3 rounded-md bg-${errorColor}-50 px-2 py-1.5 text-sm font-medium text-${errorColor}-800 hover:bg-${errorColor}-100 focus:outline-none focus:ring-2 focus:ring-${errorColor}-600 focus:ring-offset-2 focus:ring-offset-${errorColor}-50`}
-                onClick={() => setSubmitted(false)}
-              >
-                Dismiss
-              </button>
+      {submitted ? (
+        <div
+          className={`rounded-md p-4 max-w-5xl mx-auto mt-10 bg-${errorColor}-50`}
+        >
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <CheckCircleIcon
+                className={`h-5 w-5 text-${errorColor}-400`}
+                aria-hidden="true"
+              />
+            </div>
+            <div className="ml-3">
+              <h3 className={`text-sm font-medium text-${errorColor}-800`}>
+                {successMessage}
+              </h3>
+              <div className={`mt-2 text-sm text-${errorColor}-700`}>
+                <p>
+                  If you need to update this quiz or you think you made a
+                  mistake, simply do it again and it will update to the new
+                  information
+                </p>
+              </div>
+              <div className="mt-4">
+                <div className="-mx-2 -my-1.5 flex">
+                  <button
+                    type="button"
+                    className={`ml-3 rounded-md bg-${errorColor}-50 px-2 py-1.5 text-sm font-medium text-${errorColor}-800 hover:bg-${errorColor}-100 focus:outline-none focus:ring-2 focus:ring-${errorColor}-600 focus:ring-offset-2 focus:ring-offset-${errorColor}-50`}
+                    onClick={() => setSubmitted(false)}
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      ) : (
+        <></>
+      )}
+{openLibrary ? (
+    <div className="absolute bg-white">
+        <button className="ml-4 p-2 text-xs bg-red-400" onClick={() => setOpenLibrary(false)}>Close</button>
+        <div className="grid grid-cols-5 max-w-sm mx-auto text-xs font-bold text-center">
+            <div className="col-span-1">Name</div>
+            <div className="col-span-1">Grade Level</div>
+            <div className="col-span-1">Day 1</div>
+            <div className="col-span-1">Day 2</div>
+            <div className="col-span-1">Day 3</div>
+        </div>
+    {allLessons && Object.values(allLessons).map((lesson) => (
+      <div
+        className="grid grid-cols-5 max-w-sm mx-auto mb-1 text-xs tracking-tight bg-white"
+        key={lesson.id}
+      >
+        <div className="col-span-1 mt-2">{lesson.id}: {lesson.title}</div>
+        <div className="col-span-1 mt-2 mr-2">{lesson.readingLevel}</div>
+        {lesson.day1 ? <div className="col-span-1 bg-green-50 text-green-700 rounded-full text-center mt-2 mb-1 text-xs">Done</div> : <div className="col-span-1 bg-red-50 text-red-700 rounded-full text-xs text-center mt-2 mb-1">Not Done</div>}
+        {lesson.day2 ? <div className="col-span-1 bg-green-50 text-green-700 rounded-full text-center mt-2 mb-1 text-xs">Done</div> : <div className="col-span-1 bg-red-50 text-red-700 rounded-full text-xs text-center mt-2 mb-1">Not Done</div>}
+        {lesson.day3 ? <div className="col-span-1 bg-green-50 text-green-700 rounded-full text-center mt-2 mb-1">Done</div> : <div className="col-span-1 bg-red-50 text-red-700 rounded-full text-xs text-center mt-2 mb-1">Not Done</div>}
       </div>
+    ))}
     </div>
-) : <></>}
-
-    
+) : (<><button className="ml-4 absolute p-2 text-xs bg-green-500" onClick={() => setOpenLibrary(true)}>View Completed Lessons</button></>)}
+      
+<div className="max-w-xl mx-auto 2xl:max-w-5xl">
       <h1 className="text-5xl mt-12 font-bold tracking-tight text-center">
         Quiz Maker
       </h1>
@@ -222,6 +286,7 @@ export default function QuizCreation() {
           <select
             className="bg-gray-700 p-2 rounded-md text-white col-span-2"
             onChange={handleLessonChange}
+            value={title}
           >
             {lessons?.map((x) => (
               <option key={x.id} value={x.id}>
@@ -245,7 +310,11 @@ export default function QuizCreation() {
           </label>
           <label className="mt-4">
             Lyrics:
-            <textarea className="block w-full rounded-md border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" onChange={handleChange} value={text} />
+            <textarea
+              className="block w-full rounded-md border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              onChange={handleChange}
+              value={text}
+            />
           </label>
           {questions.map((question, questionIndex) => (
             <div className="w-full mt-12" key={questionIndex}>
@@ -302,7 +371,6 @@ export default function QuizCreation() {
             </div>
           ))}
         </form>
-       
 
         {/* <div>
           <pre>{JSON.stringify(json, null, 2)}</pre>
@@ -322,8 +390,7 @@ export default function QuizCreation() {
           <PlusCircleIcon /> Add Question
         </button>
       </div>
+      </div>
     </>
   );
 }
-
-
