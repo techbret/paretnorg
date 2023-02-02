@@ -286,7 +286,6 @@ export default function QuizCreation() {
           <select
             className="bg-gray-700 p-2 rounded-md text-white col-span-2"
             onChange={handleLessonChange}
-            value={title}
           >
             {lessons?.map((x) => (
               <option key={x.id} value={x.id}>
