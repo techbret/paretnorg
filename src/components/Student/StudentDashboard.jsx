@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserAuth } from '../../context/AuthContext';
 import spaceBG from '../../assets/space-background.jpg'
 import startButton from '../../assets/gameIcons/startButton.png'
@@ -20,12 +20,44 @@ import playButton from '../../assets/playButton.png'
 import { useNavigate } from 'react-router-dom';
 
 export default function StudentDashboard() {
-
-  // const  profile = useStudents(studentId);
-  // const profile = useStudents(user.uid);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { studentProfile, logout, startLesson } = UserAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Use the Image constructor to load all your images
+    const images = [
+      spaceBG,
+      startButton,
+      locked,
+      ready,
+      threeStars,
+      oneStar,
+      twoStars,
+      settings,
+      dailyStatus,
+      dailyStatusProgress,
+      gradeStatus,
+      gradeStatusProgress,
+      livesStatus,
+      liveStatusProgress
+    ];
+
+    const loadImage = (url) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => resolve();
+        img.onerror = () => reject();
+      });
+    };
+
+    // Use Promise.all to wait for all images to load
+    Promise.all(images.map(loadImage))
+      .then(() => setIsLoading(false))
+      .catch(() => console.error('Failed to load images'));
+  }, []);
 
   const lesScores = [locked, ready, oneStar, twoStars, threeStars]
 
@@ -42,7 +74,14 @@ export default function StudentDashboard() {
   }
 
 
-
+  // If the loading state is true, render a loading screen instead of the actual content
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
 
   return (
@@ -99,10 +138,10 @@ export default function StudentDashboard() {
             </div>
           </div>
           <div className='bg-black-80 opacity-50'></div>
-          
+
           <div className='flex justify-center items-center h-full'>
             <div className='grid grid-cols-4 gap-4 mx-auto '>
-            <div className='text-white sm:text-7xl text-5xl font-londrina mx-auto mb-4 col-span-4'>Welcome, {studentProfile?.firstName}</div>
+              <div className='text-white sm:text-7xl text-5xl font-londrina mx-auto mb-4 col-span-4'>Welcome, {studentProfile?.firstName}</div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score1]} alt="" /></button></div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score2]} alt="" /></button></div>
               <div className='col-span-1'><button><img className='xl:h-36 h-24 flex items-center drop-shadow-lg' src={lesScores[studentProfile?.lessonScores?.score3]} alt="" /></button></div>
