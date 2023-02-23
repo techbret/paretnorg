@@ -1,57 +1,46 @@
 import { UserAuth } from '../../context/AuthContext';
 import React, { useState } from 'react';
 import video from '../../assets/day1_Letter P_original.mp4'
+import Quiz from './Quiz';
 
-export default function StudentQuiz() {
-    const { currentLesson, currentVideo } = UserAuth();
-    const words = currentLesson.lyrics.split(" ");
-    const [clickedWords, setClickedWords] = useState([]);
+export default function StudentQuizGrader() {
+    const { currentLesson } = UserAuth();
 
-    function handleClick(index) {
-        const newClickedWords = [...clickedWords];
-        const wordIndex = clickedWords.findIndex(word => word.index === index);
-        if (wordIndex !== -1) {
-            newClickedWords[wordIndex].clicks += 1;
-        } else {
-            newClickedWords.push({ index, clicks: 1 });
-        }
-        setClickedWords(newClickedWords);
-    }
 
     return (
-        <div className='max-w-4xl mx-auto'>
-            <video className='mx-auto w-full mt-12 mb-12' controls
-            >
-                <source src={video} type="video/mp4" />
-            </video>
-            {words.map((word, index) => {
-                const wordIndex = clickedWords.findIndex(w => w.index === index);
-                const wordClicks = wordIndex === -1 ? 0 : clickedWords[wordIndex].clicks;
-                return (
-                    <button
-                        key={index}
-                        className={`bg-${getBackgroundColor(wordClicks)}-500 ml-1 text-lg`}
-                        onClick={() => handleClick(index)}
-                    >
-                        {word}
-                    </button>
-                );
-            })}
+        <div className='max-w-7xl mx-auto'>
+
+            <div className="py-10">
+                <header>
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
+                        <h1 className="text-5xl font-bold leading-tight tracking-tight text-gray-900 font-londrina">{currentLesson?.title}</h1>
+                    </div>
+                </header>
+                <main>
+                    <div className="grid grid-cols-12 sm:px-6 lg:px-8 gap-4">
+                        {/* Replace with your content */}
+                        <div className="px-4 py-8 sm:px-0 col-span-5">
+                            <div className="h-auto p-2 ">
+                                {currentLesson?.lyricLines?.map((lyric, index) => (
+                                    <div key={index}>
+                                        {lyric}
+                                        <br></br>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="px-4 py-8 sm:px-0 col-span-7">
+                            <div>
+                                <Quiz />
+                            </div>
+                        </div>
+                        {/* /End replace */}
+                    </div>
+                </main>
+            </div>
+
         </div>
     );
 }
 
-function getBackgroundColor(clicks) {
-    switch (clicks % 4) {
-        case 0:
-            return 'white';
-        case 1:
-            return 'blue';
-        case 2:
-            return 'yellow';
-        case 3:
-            return 'red';
-        default:
-            return 'white';
-    }
-}
+

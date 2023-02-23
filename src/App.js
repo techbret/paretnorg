@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
-import NavBar from './components/Navbar';
 import AuthContextProvider from './context/AuthContext';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
@@ -27,6 +25,7 @@ import Quiz from './components/Student/Quiz';
 import QuizCreation from './components/Admin/QuizCreation';
 import AdminLogin from './components/Admin/AdminLogin';
 import SubmitLessons from './components/Admin/SubmitLessons';
+import ProtectedRoute from './config/ProtectedRoute';
 function App() {
   return (
     <div>
@@ -34,14 +33,14 @@ function App() {
         <NonUserRoutes>
         </NonUserRoutes>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/create-account/:id" element={<UserInfo />} />
           <Route path='/student-info' element={<StudentInfo />} />
           <Route path='/more-info' element={<Info />} />
           <Route path='/finish-up' element={<Finish />} />
-          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/dashboard' element={<Dashboard />} />  
           <Route path='/parents' element={<Parents />} />
           <Route path='/research' element={<Research />} />
           <Route path='/student-login' element={<StudentLogin />} />
