@@ -286,7 +286,7 @@ export default function AuthContextProvider({ children }) {
           setProfile(doc.data());
           getStudent(currentUser.uid);
           setAuthRole(true)
-          // getAllLessons();
+          getAllLessons();
         });
         onSnapshot(doc(db, "students", currentUser.uid), (doc) => {
           setStudent(doc.data());
