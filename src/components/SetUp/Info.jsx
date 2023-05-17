@@ -19,7 +19,7 @@ export default function Info() {
         zip: zip,
         phone: phone,
         referralCode: referral,
-        id: profile._id
+        id: profile?._id
     }
 
     const handleSubmit = (e) => {

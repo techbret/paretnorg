@@ -123,6 +123,7 @@ export default function AuthContextProvider({ children }) {
           setDoc(doc(db, "students", userCredential.user.uid), {
             studentId: userCredential.user.uid,
             lessonsComplete: {},
+            lessonComplete: 0,
             lessonScores: { score1: 1, score2: 0, score3: 0, score4: 0 },
             lessonsAssigned: lesPlan,
             currentLesson: 0,
@@ -318,7 +319,6 @@ export default function AuthContextProvider({ children }) {
         studentUser,
         createStudentLogin,
         studentProfile,
-        uploadVideos,
         startLesson,
         currentLesson,
         currentVideo,
