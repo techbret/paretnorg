@@ -26,6 +26,7 @@ import QuizCreation from './components/Admin/QuizCreation';
 import AdminLogin from './components/Admin/AdminLogin';
 import SubmitLessons from './components/Admin/SubmitLessons';
 import ProtectedRoute from './config/ProtectedRoute';
+import EarnedABook from './components/Student/EarnedABook';
 function App() {
   return (
     <div>
@@ -33,7 +34,7 @@ function App() {
         <NonUserRoutes>
         </NonUserRoutes>
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/create-account/:id" element={<UserInfo />} />
@@ -57,6 +58,7 @@ function App() {
           <Route path='/quiz' element={<Quiz />} />
           <Route path='/admin-quiz-maker' element={<QuizCreation />} />
           <Route path='/submit' element={<SubmitLessons />} />
+          <Route path='/award' element={<EarnedABook />} />
           
           
         </Routes>
